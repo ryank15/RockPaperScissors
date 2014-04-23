@@ -1,0 +1,27 @@
+package mucis2014.mansfield.edu;
+
+/**@author Kevin Ryan
+ * @version 1.0 on 4/21/14
+ */
+
+public enum Choice {
+	Rock, Paper, Scissors;
+
+	public int compareChoice(Choice aiChoice) {
+		if (this == aiChoice) {
+			return 0;
+		}
+		
+		switch (this) {
+		case Rock:
+			return (aiChoice == Scissors ? 1 : -1);
+
+		case Paper:
+			return (aiChoice == Rock ? 1 : -1);
+
+		case Scissors:
+			return (aiChoice == Paper ? 1 : -1);
+		}
+		return 0;
+	}
+}
