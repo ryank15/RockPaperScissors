@@ -1,0 +1,31 @@
+package mucis2014.mansfield.edu;
+import java.util.Scanner;
+
+/**@author Kevin Ryan
+ * @version 1.0 on 4/21/14
+ */
+
+public class User {
+	static Scanner scan = new Scanner(System.in);
+
+	public static Choice getChoice() {
+		System.out.print("Rock, Paper, or Scissors? \n");
+		String choice = scan.nextLine();
+		if (choice.equalsIgnoreCase("Rock")) {
+			return Choice.Rock;
+		} else if (choice.equalsIgnoreCase("Paper")) {
+			return Choice.Paper;
+		} else {
+			return Choice.Scissors;
+		}
+	}
+
+	public boolean playAgain() {
+		System.out.print("Do you want to play again? (y/n)");
+		String userChoice = scan.nextLine();
+		if (userChoice.equalsIgnoreCase("y"))
+			return true;
+		else
+			return false;
+	}
+}
