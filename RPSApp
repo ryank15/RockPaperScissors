@@ -1,0 +1,74 @@
+package mucis2014.mansfield.edu;
+
+/**@author Kevin Ryan
+ * @version 1.0 on 4/21/14
+ */
+
+public class RPSApp {
+	private User user;
+	private Computer computer;
+	private int cScore;
+	private int uScore;
+	private int tie;
+	private int numberOfGames;
+
+	public RPSApp() {
+
+		user = new User();
+		computer = new Computer();
+		cScore = 0;
+		uScore = 0;
+		tie = 0;
+		numberOfGames = 0;
+	}
+
+	public void startGame() {
+		numberOfGames++;
+		System.out.println("\nRock, Paper, Scissors Says Shoot! \n");
+		compareChoice();
+
+		if (user.playAgain() == true) {
+			startGame();
+			numberOfGames++;
+		} else
+			printStats();
+	}
+
+	public void compareChoice() {
+		Choice userChoice = User.getChoice();
+		Choice aiChoice = Computer.getChoice();
+		System.out.println("\nYou played " + userChoice + ".");
+		System.out.println("Computer played " + aiChoice + ".\n");
+		int compareChoice = userChoice.compareChoice(aiChoice);
+
+		switch (compareChoice) {
+		case 0:
+			System.out.println("Tie!");
+			tie++;
+			break;
+		case 1:
+			System.out.println(userChoice + " beats " + aiChoice + " You Win!");
+			uScore++;
+			break;
+		case -1:
+			System.out.println(aiChoice + " beats " + userChoice + " Computer Wins!");
+			cScore++;
+			break;
+		}
+	}
+
+	private void printStats() {
+		int wins = uScore;
+		int losses = cScore;
+		int ties = tie;
+		int games = numberOfGames;
+
+		System.out.println("\nGame Stats: " + wins + "-" + losses + "-" + ties + "-" + games);
+		System.out.println("Goodbye!");
+	}
+
+	public static void main(String[] args) {
+		RPSApp game = new RPSApp();
+		game.startGame();
+	}
+}
