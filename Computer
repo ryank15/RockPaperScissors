@@ -1,0 +1,15 @@
+package mucis2014.mansfield.edu;
+import java.util.Random;
+
+/**@author Kevin Ryan
+ * @version 1.0 on 4/21/14
+ */
+
+public class Computer {
+	public static Choice getChoice() {
+		Choice[] choice = Choice.values();
+		Random rand = new Random();
+		int i = rand.nextInt(choice.length);
+		return choice[i];
+	}
+}
