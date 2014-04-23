@@ -1,0 +1,230 @@
+package mucis2014.mansfield.edu;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+
+/**@author Kevin Ryan
+ * @version 1.0 on 4/21/14
+ */
+
+public class RPSGUI {
+	public RPSGUI() {
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				new GUIPanel();
+			}
+		});
+	}
+
+	public static void main(String[] args) {
+		new RPSGUI();
+	}
+}
+
+class GUIPanel {
+	static JFrame frame;
+	private JMenuItem showStats, exit, about;
+	private JTextArea outcomeTA;
+	private JRadioButton rockBtn, paperBtn, scissorsBtn;
+	private JButton shootBtn;
+	private JPanel dataPanel, outcomePanel;
+	private ButtonGroup group;
+	private int tie, uScore, cScore, numberOfGames;
+
+	public GUIPanel() {
+		dataPanel = new JPanel();
+		outcomePanel = new JPanel();
+		dataPanel.setLayout(new GridBagLayout());
+		dataPanel.setOpaque(true);
+
+		Font font = new Font("Serif", Font.PLAIN, 16);
+
+		outcomeTA = new JTextArea("Rock, Paper, Scissors Says Shoot!", 10, 30);
+		outcomeTA.setFont(font);
+		outcomeTA.setBackground(new Color(255, 255, 255));
+		outcomeTA.setLineWrap(true);
+		outcomeTA.setWrapStyleWord(true);
+		outcomeTA.setEditable(false);
+		JScrollPane outcomeSP = new JScrollPane(outcomeTA,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		outcomePanel.add(outcomeSP);
+		
+		//Creates Radio Buttons
+		rockBtn = new JRadioButton((String) "Rock", true);
+		paperBtn = new JRadioButton((String) "Paper", false);
+		scissorsBtn = new JRadioButton((String) "Scissors", false);
+		//Adds Radio Buttons to Group for Selection
+		group = new ButtonGroup();
+		group.add(rockBtn);
+		group.add(paperBtn);
+		group.add(scissorsBtn);
+		//Creates Shoot! Button with Listener
+		shootBtn = new JButton("Shoot!");
+		shootBtn.addActionListener(new ShootListener());
+		//Adds Buttons and Text Area to GUI Data Panel
+		dataPanel.add(rockBtn, getConstraints(0, 0, 1, 1, "left"));
+		dataPanel.add(paperBtn, getConstraints(0, 1, 1, 1, "left"));
+		dataPanel.add(scissorsBtn, getConstraints(0, 2, 1, 1, "left"));
+		dataPanel.add(shootBtn, getConstraints(0, 3, 1, 1, "right"));
+		dataPanel.add(outcomeTA, getConstraints(1, 0, 1, 2, "left"));
+
+		frame = new JFrame("Rock, Paper, Scissors Says Shoot!");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setJMenuBar(createMenuBar());
+		frame.setContentPane(dataPanel);
+		frame.pack();
+		frame.setLocation(480, 150);
+		frame.setResizable(true);
+		frame.setVisible(true);
+	}
+
+	class ShootListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			//Adds One to Number of Games Integer
+			numberOfGames++;
+			if (rockBtn.isSelected()) {
+				//Sets Users Choice to Rock
+				Choice userChoice = Choice.Rock;
+				//Compares Users Choice to Computers Choice
+				int compareChoice = userChoice.compareChoice(Computer.getChoice());
+				switch (compareChoice) {
+				case 0:
+					outcomeTA.setText(userChoice + " ties " + Choice.Rock);
+					tie++;
+					break;
+				case 1:
+					outcomeTA.setText(userChoice + " beats " + Choice.Scissors + " \nYou Win!");
+					uScore++;
+					break;
+				case -1:
+					outcomeTA.setText(Choice.Paper + " beats " + userChoice + " \nComputer Wins!");
+					cScore++;
+					break;
+				}
+
+			} else if (paperBtn.isSelected()) {
+				//Sets Users Choice to Paper
+				Choice userChoice = Choice.Paper;
+				//Compares Users Choice to Computers Choice
+				int compareChoice = userChoice.compareChoice(Computer.getChoice());
+				switch (compareChoice) {
+				case 0:
+					outcomeTA.setText(userChoice + " ties " + Choice.Paper);
+					tie++;
+					break;
+				case 1:
+					outcomeTA.setText(userChoice + " beats " + Choice.Rock + " \nYou Win!");
+					uScore++;
+					break;
+				case -1:
+					outcomeTA.setText(Choice.Scissors + " beats " + userChoice
+							+ " \nComputer Wins!");
+					cScore++;
+					break;
+				}
+			} else {
+				//Sets Users Choice to Scissors
+				Choice userChoice = Choice.Scissors;
+				//Compares Users Choice to Computers Choice
+				int compareChoice = userChoice.compareChoice(Computer.getChoice());
+				switch (compareChoice) {
+				case 0:
+					outcomeTA.setText(userChoice + " ties " + Choice.Scissors);
+					tie++;
+					break;
+				case 1:
+					outcomeTA.setText(userChoice + " beats " + Choice.Paper + " \nYou Win!");
+					uScore++;
+					break;
+				case -1:
+					outcomeTA.setText(Choice.Rock + " beats " + userChoice + " \nComputer Wins!");
+					cScore++;
+					break;
+				}
+			}
+		}
+	}
+
+	private GridBagConstraints getConstraints(int gridx, int gridy, int gridwidth, int gridheight,
+			String justify) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(5, 5, 5, 5);
+		c.ipadx = 0;
+		c.ipady = 0;
+		c.gridx = gridx;
+		c.gridy = gridy;
+		c.gridwidth = gridwidth;
+		c.gridheight = gridheight;
+		if (justify.equalsIgnoreCase("Left")) {
+			c.anchor = GridBagConstraints.WEST;
+		}else {
+			c.anchor = GridBagConstraints.EAST;
+		}
+		return c;
+	}
+	//Create Menu Bar
+	public JMenuBar createMenuBar() {
+		JMenuBar menuBar;
+		JMenu menu;
+
+		menuBar = new JMenuBar();
+
+		menu = new JMenu("File");
+		menu.setMnemonic(KeyEvent.VK_F);
+		menuBar.add(menu);
+		//Create Stats Menu Item
+		showStats = new JMenuItem("Stats");
+		showStats.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//Shows Stats in Popup Box
+				JOptionPane.showMessageDialog(dataPanel, "User Score: " + uScore
+						+ "\nComputer Score: " + cScore + "\nTies: " + tie + "\nNumber of Games: "
+						+ numberOfGames, "Game Stats", JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		menu.add(showStats);
+
+		exit = new JMenuItem("Exit");
+		exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		menu.add(exit);
+
+		menu = new JMenu("Help");
+		menu.setMnemonic(KeyEvent.VK_H);
+		menuBar.add(menu);
+
+		about = new JMenuItem("About");
+		about.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(dataPanel, "GUI by Kevin Ryan 2014.04.21", "About",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		});
+		menu.add(about);
+		return menuBar;
+	}
+}
